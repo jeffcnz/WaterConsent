@@ -131,18 +131,22 @@
 		};
 
 	info.addTo(map);
-
+	
 	//Helper function that checks there is a value, if undefined or null then replaces with a blank
 	function checkDefined(property) {
 		if (property) {return property} else {return ' '};
 		}
+		
+		
 	//Location control and handler
 	lc = L.control.locate({
 		follow: true,
 		icon: 'fa fa-map-marker',
-		keepCurrentZoomLevel: true,
+		keepCurrentZoomLevel: false,
 		strings: {
 			title: "Show me where I am"
+			},
+		locateOptions: {
 			}
 		}).addTo(map);
 	
