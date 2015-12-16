@@ -29,6 +29,7 @@
 
 <body>
     <div id="map" class="map" ></div>
+    <div id="info"><h4>Consent Information</h4></div>
     
     
     <script>
@@ -111,28 +112,32 @@
 		}
 
 	//Create the information panel and add info to it
-	var info = L.control();
-	
-	info.onAdd = function (map) {
-		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-		this.update();
-		return this._div;
-		};
+	var info = L.control.sidebar('info', {
+    position: 'right'
+});
+	map.addControl(info);
+	//info.onAdd = function (map) {
+	//	this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+	//	this.update();
+	//	return this._div;
+	//	};
 
 	// method that updates the control based on feature properties passed.
 	info.update = function (props) {
-		this._div.innerHTML = '<h4>Consent Information</h4>' +  (props ?
-        '<b>Consent ' + props.ConsentNumber + 
-        '</b><br />Bore ' + props.WellNumber + 
-        '<br />Water Use ' + props.UseDetail +
-        '<br /><b>Water Meter</b>' + 
-        '<br />Required? ' + props.WaterMeterRequired + 
-        '<br />Required by ' + props.DateWaterMeterRequired +
-        '<br />Installed? ' + props.WaterMeterInstalled
-        : 'Click a Consent');
+		info.setContent('<table><tr><td><h4>Consent Information</h4></td></tr>' +  
+			'<tr><td><b>Consent: </td><td>' + props.ConsentNumber + '</td></b></tr>'+
+			'<tr><td>Bore: </td><td>' + checkDefined(props.WellNumber) + '</td></tr>'+
+			'<tr><td>Water Use: </td><td>' + props.UseDetail +'</td></tr>'+
+			'<tr><td><b>Water Meter</b></td><td></tr>' + 
+			'<tr><td>Required? </td><td>' + props.WaterMeterRequired + '</td></tr>'+
+			'<tr><td>Required by </td><td>' + checkDefined(props.DateWaterMeterRequired) +'</td></tr>'+
+			'<tr><td>Installed? </td><td>' + props.WaterMeterInstalled +'</td></tr>'+
+			'</table>'
+			); 
+			info.show();
 		};
 
-	info.addTo(map);	
+	
 	
 	//Helper function that checks there is a value, if undefined or null then replaces with a blank
 	function checkDefined(property) {
