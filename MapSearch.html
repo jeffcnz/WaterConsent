@@ -29,7 +29,6 @@
 
 <body>
     <div id="map" class="map" ></div>
-    <div id="info"><h4>Consent Information</h4></div>
     
     
     <script>
@@ -112,31 +111,28 @@
 		}
 
 	//Create the information panel and add info to it
-	var info = L.control.sidebar('info', {
-    position: 'right'
-});
-	map.addControl(info);
-	//info.onAdd = function (map) {
-	//	this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
-	//	this.update();
-	//	return this._div;
-	//	};
+	var info = L.control();
+	
+	info.onAdd = function (map) {
+		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+		this.update();
+		return this._div;
+		};
 
 	// method that updates the control based on feature properties passed.
 	info.update = function (props) {
-		info.setContent('<h4>Consent Information</h4>' +  
-			'<b>Consent: ' + props.ConsentNumber + 
-			'</b><br />Bore: ' + checkDefined(props.WellNumber) + 
-			'<br />Water Use: ' + props.UseDetail +
-			'<br /><b>Water Meter</b>' + 
-			'<br />Required? ' + props.WaterMeterRequired + 
-			'<br />Required by ' + checkDefined(props.DateWaterMeterRequired) +
-			'<br />Installed? ' + props.WaterMeterInstalled
-			); 
-			info.show();
+		this._div.innerHTML = '<h4>Consent Information</h4>' +  (props ?
+        '<b>Consent ' + props.ConsentNumber + 
+        '</b><br />Bore ' + props.WellNumber + 
+        '<br />Water Use ' + props.UseDetail +
+        '<br /><b>Water Meter</b>' + 
+        '<br />Required? ' + props.WaterMeterRequired + 
+        '<br />Required by ' + props.DateWaterMeterRequired +
+        '<br />Installed? ' + props.WaterMeterInstalled
+        : 'Click a Consent');
 		};
 
-	
+	info.addTo(map);	
 	
 	//Helper function that checks there is a value, if undefined or null then replaces with a blank
 	function checkDefined(property) {
